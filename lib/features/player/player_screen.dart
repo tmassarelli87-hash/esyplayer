@@ -543,6 +543,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     final title = await controller.getProperty('media-title');
     final duration = await controller.getProperty('duration');
     final dimensions = await controller.getProperty('video-params');
+    final decoder = await controller.getProperty('hwdec-current');
+    final droppedFrames = await controller.getProperty('frame-drop-count');
     if (!context.mounted) {
       return;
     }
@@ -550,7 +552,13 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Informazioni media'),
-        content: Text('Titolo: $title\nDurata: $duration\nVideo: $dimensions'),
+        content: Text(
+          'Titolo: $title\nDurata: $duration\nVideo: $dimensions\n'
+          'Decodifica hardware attiva: '
+          '${decoder.isEmpty ? 'non disponibile' : decoder}\n'
+          'Fotogrammi scartati: '
+          '${droppedFrames.isEmpty ? 'non disponibile' : droppedFrames}',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),

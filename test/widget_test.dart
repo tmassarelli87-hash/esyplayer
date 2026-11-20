@@ -101,6 +101,42 @@ void main() {
     await gesture.up();
   });
 
+  testWidgets('media information reports the active hardware decoder', (
+    tester,
+  ) async {
+    final backend = FakeBackend()
+      ..properties['hwdec-current'] = 'drm'
+      ..properties['frame-drop-count'] = '3';
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          playerControllerProvider.overrideWith(
+            (ref) => PlayerController(backend),
+          ),
+        ],
+        child: const MaterialApp(home: PlayerScreen(enableDropTarget: false)),
+      ),
+    );
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Nessun media caricato')),
+      kind: PointerDeviceKind.mouse,
+      buttons: kSecondaryMouseButton,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Visualizza'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Informazioni media…'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining('Decodifica hardware attiva: drm'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Fotogrammi scartati: 3'), findsOneWidget);
+    await gesture.up();
+  });
+
   testWidgets('keyboard shortcuts are shown and control the player', (
     tester,
   ) async {

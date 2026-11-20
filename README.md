@@ -9,6 +9,8 @@ GPL-3.0-or-later. See [LICENSE](LICENSE).
 
 ## Development
 
+Use Flutter 3.50.0 or newer (Dart 3.14.0 or newer).
+
 ```sh
 flutter pub get
 flutter analyze
@@ -84,6 +86,14 @@ can place EsyPlayer in Program Files and register file associations.
   builds use the newer pinned libmpv; on Linux, Q/W report an unsupported
   version rather than changing the primary delay.
 - Hardware decoding choices are passed to mpv and may vary by GPU and driver.
+- Linux video rendering uses a pinned, unmerged
+  [media_kit fix](https://github.com/media-kit/media-kit/pull/1466); some
+  drivers may still fall back to software rendering or have display issues.
+  On Raspberry Pi 5 the hardware video decoder supports HEVC, not H.264, VP9
+  or AV1. The actual decoder and dropped-frame count are shown under
+  Visualizza > Informazioni media; `no` means software decoding. Hardware
+  decoding and GPU rendering are separate, and performance depends on the
+  video, driver and display.
 - Subtitles are rendered by mpv/libass to apply the selected style once; the
   in-video subtitle widget and controls are disabled to prevent duplicate
   overlays.

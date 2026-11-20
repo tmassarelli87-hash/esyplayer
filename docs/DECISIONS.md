@@ -69,3 +69,10 @@
   the SHA-256-pinned, baseline x86-64 shinchiro mpv v0.42 build, preserving
   the remaining media_kit libraries. CI verifies both subtitle delays using
   the packaged DLL. Linux continues to use the system libmpv.
+- Use window_manager 0.7 and nativeapi 0.6 with Flutter 3.50/Dart 3.14;
+  nativeapi 0.5.10 uses an isolate API unavailable in the stable SDK.
+- Pin the unmerged media_kit_video Linux EGL fix from media-kit/media-kit#1466
+  until an upstream release includes it. Version 2.0.1 falls back to software
+  rendering when Flutter's EGL context is not current on the platform thread.
+  On a Raspberry Pi 5, the fix enables GPU rendering and HEVC DRM decoding;
+  other codecs and graphics drivers may still require software fallback.
